@@ -6,7 +6,9 @@ const child_process = require('child_process');
 var fn2d = new Map();
 
 function listener(eventType, fileName) {
-    let command = fn2d.get(fileName).map(value => value instanceof Number ? filename : String(value));
+    let command = fn2d.get(fileName);
+    if(!command) console.log('An error has occurred.');
+    command = fn2d.get(fileName).map(value => typeof value === 'number' ? fileName : String(value));
     let child = child_process.spawn(command.shift(), command, {
         stdio: ['ignore', 'pipe', 'pipe'],
         windowsHide: true
