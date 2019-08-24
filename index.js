@@ -26,7 +26,11 @@ fs.readFile('run-on-change.json', (err, data) => {
         if(!list[i] instanceof Array) throw 'Invalid run-on-change.json file';
         for(let j = 1; j < list[i].length; j++) {
             fn2d.set(list[i][j], list[i][0]);
-            fs.watch(list[i][j], listener);
+            try {
+                fs.watch(list[i][j], listener);
+            } catch (error) {
+                console.log('ERROR : Failed to watch file: ' + list[i][j]);
+            }
         }
     }
 });
