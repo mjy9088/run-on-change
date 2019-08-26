@@ -8,6 +8,7 @@ function getListener(fileName, comm) {
         let command = comm.map(value => typeof value === 'number' ? fileName : String(value));
         let child = child_process.spawn(command.shift(), command, {
             stdio: ['ignore', 'pipe', 'pipe'],
+            shell: true,
             windowsHide: true
         });
         child.on('error', function(err) {
