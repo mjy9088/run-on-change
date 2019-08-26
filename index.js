@@ -3,8 +3,6 @@
 const fs = require('fs');
 const child_process = require('child_process');
 
-var fn2d = new Map();
-
 function getListener(fileName, comm) {
     return () => {
         let command = comm.map(value => typeof value === 'number' ? fileName : String(value));
