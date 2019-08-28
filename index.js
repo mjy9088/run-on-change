@@ -23,14 +23,15 @@ fs.readFile('run-on-change.json', (err, data) => {
     if (err) throw err;
     let list = JSON.parse(data);
     if(!list instanceof Array) throw 'Invalid run-on-change.json file';
-    for(let i = 0; i < list.length; i++) {
-        if(!list[i] instanceof Array) throw 'Invalid run-on-change.json file';
-        for(let j = 1; j < list[i].length; j++) {
+    list.forEach(li => {
+        if(!li instanceof Array) throw 'Invalid run-on-change.json file';
+        let t = li.shift();
+        li.forEach(l => {
             try {
-                fs.watch(list[i][j], getListener(list[i][j], list[i][0]));
+                fs.watch(l, getListener(l, t));
             } catch (error) {
-                console.log('ERROR : Failed to watch file: ' + list[i][j]);
+                console.log('ERROR : Failed to watch file: ' + l);
             }
-        }
-    }
+        });
+    });
 });
