@@ -6,19 +6,25 @@ Run something on file change
 ## Installation
 
 ```bash
-npm install run-on-change
+npm install --save-dev run-on-change
 ```
 
 
 
 ## Usage example
 
-Create file `run-on-change.json`
+Make some file like below (Let's name it `test.bat`)
+
+```shell
+@echo off
+babel --plugins transform-react-jsx %1.jsx > %1.js
+```
+
+and create file `run-on-change.json`
 
 ```json
 [
-	[["cmd", "/c", "echo test"], "1.txt", "2.txt", "3.txt", "4.txt"],
-	[["cmd", "/c", "echo File ", 0 , " has changed"], "test.txt"]
+	[["test.bat", "1"], "1.jsx"]
 ]
 ```
 
@@ -28,9 +34,9 @@ and just run
 npx run-on-change
 ```
 
-It will run `cmd /c echo hello world! test.txt` on `test.txt` changes
+It will automatically transplie the jsx file **on file changes**
 
-Each array's first element is commands array, and rests are file's path
+Each array's first element is commands array, and rests are file's path.
 
 
 
