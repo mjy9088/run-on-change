@@ -5,7 +5,14 @@ const child_process = require('child_process');
 
 function getListener(fileName, comm) {
     return () => {
-        let command = comm.map(value => typeof value === 'number' ? fileName : String(value));
+        let command = comm.map(value => {
+            if(typeof value === 'number')
+                switch(value) {
+                    case 0:
+                        return fileName;
+                }
+            return String(value);
+        });
         let child = child_process.spawn(command.shift(), command, {
             stdio: ['ignore', 'pipe', 'pipe'],
             shell: true,

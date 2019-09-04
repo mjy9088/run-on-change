@@ -17,14 +17,17 @@ Make some file like below (Let's name it `test.bat`)
 
 ```shell
 @echo off
-babel --plugins transform-react-jsx %1.jsx > %1.js
+setlocal
+set fn=%1
+babel --plugins transform-react-jsx %fn% > ../%fn:~0,-1%
 ```
 
 and create file `run-on-change.json`
 
 ```json
 [
-	[["test.bat", "1"], "1.jsx"]
+	[["test.bat", "test.jsx"], "test.jsx"],
+	[["test.bat", 0], "base.jsx", "ui.jsx", "script.jsx"]
 ]
 ```
 
@@ -36,7 +39,11 @@ npx run-on-change
 
 It will automatically transplie the jsx file **on file changes**
 
-Each array's first element is commands array, and rests are file's path.
+Each array's first element is command array, and rests are files' path.
+
+First element of command array is actual command, rests are parameters
+
+To pass file's name as argument, pass number 0 as parameter
 
 
 
