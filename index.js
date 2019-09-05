@@ -3,7 +3,7 @@
 const fs = require('fs');
 const child_process = require('child_process');
 
-function getListener(fileName, comm) {
+function getListener(comm, fileName) {
     return () => {
         let command = comm.map(value => {
             if(typeof value === 'number')
@@ -44,7 +44,7 @@ function processEntry(file, command) {
 
 function processFile(file, command) {
     try {
-        fs.watch(file, getListener(file, command));
+        fs.watch(file, getListener(command, file));
     } catch (error) {
         console.log('ERROR : Failed to watch file: ' + file);
     }
