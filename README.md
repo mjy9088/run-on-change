@@ -26,8 +26,8 @@ and create file `run-on-change.json`
 
 ```json
 [
-	[["test.bat", "test.jsx"], "test.jsx"],
-	[["test.bat", 0], "script.jsx", {"type": "text", "file": "list.txt"}]
+	[[["babel", "--plugins", "transform-react-jsx", 0], "sss.js"], "s.jsx"],
+	[[["test.bat", 0]], "script.jsx", {"type": "text", "file": "list.txt"}]
 ]
 ```
 
@@ -37,15 +37,17 @@ and just run
 npx run-on-change
 ```
 
-It will automatically transplie the jsx file **on file changes**
+It will automatically transplie the jsx file **on file changes** (s.jsx and listed in list.txt)
 
-Each array's first element is command array, and rests are files.
+Each array's first element is commands array, and rests are files.
 
 If file is object with `{type: "text"}`, It will watch all files listed in the `file`.
 
+Each elements of commands array are command array.
+
 First element of command array is actual command, rests are parameters
 
-To pass file's name as argument, pass number 0 as parameter
+To pass file's name as parameter, pass number 0 as parameter
 
 
 
