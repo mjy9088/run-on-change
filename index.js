@@ -5,24 +5,53 @@ const child_process = require('child_process');
 
 function getListener(comm, {fileName: file}) {
     return () => {
-        let command = comm.map(value => {
-            if(typeof value === 'number')
-                switch(value) {
-                    case 0:
-                        return file;
+        if(!comm instanceof Array)
+        {
+            console.log('ERROR : command must be an array');
+            return;
+        }
+        var prev;
+        for(let i = 0; i < comm.length; i++) {
+            let command = comm[i];
+            if(typeof command === 'string') {
+                if(i == 0) {
+                    prev = fs.createReadStream(command);
                 }
-            return String(value);
-        });
-        let child = child_process.spawn(command.shift(), command, {
-            stdio: ['ignore', 'pipe', 'pipe'],
-            shell: true,
-            windowsHide: true
-        });
-        child.on('error', function(err) {
-            console.log('ERROR : Failed to run: ' + err);
-        });
-        child.stdout.on('data', (data) => console.log(file + " : " + data));
-        child.stderr.on('data', (data) => console.log(file + " : " + data));
+                else {
+                    if(comm[i + 1]) {
+                        console.log('ERROR : file is allowed at first or last only');
+                    }
+                    prev.pipe(fs.createWriteStream(command));
+                    return;
+                }
+            }
+            else {
+                command = command.map(value => {
+                    if(typeof value === 'number')
+                        switch(value) {
+                            case 0:
+                                return file;
+                        }
+                    return String(value);
+                });
+                let child = child_process.spawn(command.shift(), command, {
+                    stdio: [prev ? 'pipe' : 'ignore', 'pipe', 'pipe'],
+                    shell: true,
+                    windowsHide: true
+                });
+                child.on('error', function(err) {
+                    console.log('ERROR : Failed to run: ' + err);
+                });
+                if(prev) {
+                    prev.pipe(child.stdin);
+                }
+                prev = child.stdout;
+                child.stderr.on('data', (data) => console.log(`${file}[${i}] : ` + data));
+            }
+        }
+        if(prev) {
+            prev.on('data', (data) => console.log(file + " : " + data));
+        }
     };
 }
 
