@@ -3,13 +3,13 @@
 const fs = require('fs');
 const child_process = require('child_process');
 
-function getListener(comm, fileName) {
+function getListener(comm, {fileName: file}) {
     return () => {
         let command = comm.map(value => {
             if(typeof value === 'number')
                 switch(value) {
                     case 0:
-                        return fileName;
+                        return file;
                 }
             return String(value);
         });
@@ -21,8 +21,8 @@ function getListener(comm, fileName) {
         child.on('error', function(err) {
             console.log('ERROR : Failed to run: ' + err);
         });
-        child.stdout.on('data', (data) => console.log(fileName + " : " + data));
-        child.stderr.on('data', (data) => console.log(fileName + " : " + data));
+        child.stdout.on('data', (data) => console.log(file + " : " + data));
+        child.stderr.on('data', (data) => console.log(file + " : " + data));
     };
 }
 
@@ -44,7 +44,7 @@ function processEntry(file, command) {
 
 function processFile(file, command) {
     try {
-        fs.watch(file, getListener(command, file));
+        fs.watch(file, getListener(command, {fileName: file}));
     } catch (error) {
         console.log('ERROR : Failed to watch file: ' + file);
     }
