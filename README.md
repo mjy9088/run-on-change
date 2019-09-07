@@ -34,8 +34,7 @@ and run
 npx run-on-change
 ```
 
-It will automatically transpile the jsx file **on file changes** (`test.jsx` to `test.js`)
-and print "file (file name) is changed" on each file listed in `list.txt` changes.
+It will automatically transpile the jsx file **on file changes** (listed in `list.txt`)
 
 Each array's first element is commands array, and rests are files.
 If file is object with `{type: "text"}`, It will watch all files listed in the `file`.
