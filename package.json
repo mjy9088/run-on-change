@@ -1,6 +1,6 @@
 {
   "name": "run-on-change",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Run something on file change ",
   "main": "index.js",
   "scripts": {

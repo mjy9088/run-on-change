@@ -8,11 +8,16 @@ const child_process = require('child_process');
 function etc2string(id, args) {
     switch(id) {
         case 0:
+            if(args.original) return args.original;
         case 1:
             return args.fileName;
         case 2:
             return args.absolutePath;
     }
+}
+
+function arr2string(arr, args) {
+    return util.format.apply(null, [arr[0]].concat(arr.filter((el, idx) => idx != 0).map(v => etc2string(v, args))));
 }
 
 function getListener(comm, args) {
@@ -25,22 +30,26 @@ function getListener(comm, args) {
         var prev;
         for(let i = 0; i < comm.length; i++) {
             let command = comm[i];
-            if(typeof command === 'string') {
+            console.log(command);
+            console.log(typeof command);
+            if(!Array.isArray(command)) {
+                console.log('is not an array');
                 if(i == 0) {
-                    prev = fs.createReadStream(command);
+                    prev = fs.createReadStream(typeof command === 'number' ? etc2string(command, args) : command);
                 }
                 else {
                     if(comm[i + 1]) {
                         console.log('ERROR : file is allowed at first or last only');
                     }
-                    prev.pipe(fs.createWriteStream(command));
+                    prev.pipe(fs.createWriteStream(typeof command === 'number' ? etc2string(command, args) : command));
                     return;
                 }
             }
             else {
+                console.log('is an array');
                 command = command.map(value => {
                     if(value instanceof Array) {
-                        return util.format.apply(null, [value.shift()].concat(value.map(v => etc2string(v, args))));
+                        return arr2string(value);
                     }
                     else if(typeof value === 'number') {
                         return etc2string(value, args);
@@ -77,7 +86,7 @@ function processEntry(file, command) {
     else {
         switch(file.type) {
             case 'text':
-                processText(file.file, command);
+                processText(file, command);
                 break;
             default:
                 console.log('ERROR : Unknown type: ' + file.type);
@@ -86,18 +95,28 @@ function processEntry(file, command) {
     }
 }
 
-function processFile(file, command) {
+function processFile(file, command, args) {
+    let attrs = {
+        fileName: file,
+        absolutePath: path.resolve(file)
+    };
+    if(args) {
+        attrs.original = args.original;
+    }
     try {
-        fs.watch(file, getListener(command, {fileName: file, absolutePath: path.resolve(file)}));
+        fs.watch(file, getListener(command, attrs));
     } catch (error) {
         console.log('ERROR : Failed to watch file: ' + file);
     }
 }
 
-function processText(file, command) {
-    fs.readFile(file, (err, data) => {
+function processText(args, command) {
+    fs.readFile(args.file, (err, data) => {
         if (err) throw err;
-        data.toString().split('\n').map(line => line.trim()).filter(line => !!line).forEach(line => processFile(line, command));
+        data.toString().split('\n').map(line => line.trim()).filter(line => !!line).forEach(line => {
+            let fileName = args.filter ? arr2string(args.filter, {fileName: line, absolutePath: path.resolve(line)}) : line;
+            return processFile(fileName, command, {original: line});
+        });
     })
 }
 

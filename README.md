@@ -17,8 +17,14 @@ Just create file `run-on-change.json ` for project
 
 ```json
 [
-	[[["babel", "--plugins", "transform-react-jsx", 0], "test.js"], "test.jsx"],
-	[[["echo", ["File %s is changed", 0]], {"type": "text", "file": "list.txt"}]
+    [
+        [["babel", "--plugins", "transform-react-jsx", 1], 0],
+        {
+            "type": "text",
+            "file": "list.txt",
+            "filter" : ["%sx", 0]
+        }
+    ]
 ]
 ```
 
