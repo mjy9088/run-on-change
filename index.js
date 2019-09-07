@@ -2,7 +2,18 @@
 
 const fs = require('fs');
 const path = require('path');
+const util = require('util');
 const child_process = require('child_process');
+
+function etc2string(id, args) {
+    switch(id) {
+        case 0:
+        case 1:
+            return args.fileName;
+        case 2:
+            return args.absolutePath;
+    }
+}
 
 function getListener(comm, args) {
     return () => {
@@ -28,15 +39,15 @@ function getListener(comm, args) {
             }
             else {
                 command = command.map(value => {
-                    if(typeof value === 'number')
-                        switch(value) {
-                            case 0:
-                            case 1:
-                                return args.fileName;
-                            case 2:
-                                return args.absolutePath;
-                            }
-                    return String(value);
+                    if(value instanceof Array) {
+                        return util.format.apply(null, [value.shift()].concat(value.map(v => etc2string(v, args))));
+                    }
+                    else if(typeof value === 'number') {
+                        return etc2string(value, args);
+                    }
+                    else {
+                        return String(value);
+                    }
                 });
                 let child = child_process.spawn(command.shift(), command, {
                     stdio: [prev ? 'pipe' : 'ignore', 'pipe', 'pipe'],
