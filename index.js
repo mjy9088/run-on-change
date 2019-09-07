@@ -30,10 +30,7 @@ function getListener(comm, args) {
         var prev;
         for(let i = 0; i < comm.length; i++) {
             let command = comm[i];
-            console.log(command);
-            console.log(typeof command);
             if(!Array.isArray(command)) {
-                console.log('is not an array');
                 if(i == 0) {
                     prev = fs.createReadStream(typeof command === 'number' ? etc2string(command, args) : command);
                 }
@@ -46,7 +43,6 @@ function getListener(comm, args) {
                 }
             }
             else {
-                console.log('is an array');
                 command = command.map(value => {
                     if(value instanceof Array) {
                         return arr2string(value);
