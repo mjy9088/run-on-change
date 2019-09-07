@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const path = require('path');
 const child_process = require('child_process');
-const path = require("path");
 
 function getListener(comm, args) {
     return () => {
