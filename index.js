@@ -2,8 +2,9 @@
 
 const fs = require('fs');
 const child_process = require('child_process');
+const path = require("path");
 
-function getListener(comm, {fileName: file}) {
+function getListener(comm, args) {
     return () => {
         if(!comm instanceof Array)
         {
@@ -30,8 +31,11 @@ function getListener(comm, {fileName: file}) {
                     if(typeof value === 'number')
                         switch(value) {
                             case 0:
-                                return file;
-                        }
+                            case 1:
+                                return args.fileName;
+                            case 2:
+                                return args.absolutePath;
+                            }
                     return String(value);
                 });
                 let child = child_process.spawn(command.shift(), command, {
@@ -73,7 +77,7 @@ function processEntry(file, command) {
 
 function processFile(file, command) {
     try {
-        fs.watch(file, getListener(command, {fileName: file}));
+        fs.watch(file, getListener(command, {fileName: file, absolutePath: path.resolve(file)}));
     } catch (error) {
         console.log('ERROR : Failed to watch file: ' + file);
     }

@@ -43,11 +43,13 @@ Each array's first element is commands array, and rests are files.
 
 If file is object with `{type: "text"}`, It will watch all files listed in the `file`.
 
-Each elements of commands array are command array.
+Each elements of commands array are command array or file.
 
 First element of command array is actual command, rests are parameters
 
-To pass file's name as parameter, pass number 0 as parameter
+To pass file name or etc..., pass number instead of string as parameter
+
+0 to specified file name, 1 to actual file name, 2 to absolute path, ...
 
 
 
