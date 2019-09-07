@@ -5,6 +5,8 @@ const path = require('path');
 const util = require('util');
 const child_process = require('child_process');
 
+const argv = require('minimist')(process.argv.slice(2));
+
 function etc2string(id, args) {
     switch(id) {
         case 0:
@@ -21,7 +23,7 @@ function arr2string(arr, args) {
 }
 
 function getListener(comm, args) {
-    return () => {
+    const ret = () => {
         if(!comm instanceof Array)
         {
             console.log('ERROR : command must be an array');
@@ -73,6 +75,9 @@ function getListener(comm, args) {
             prev.on('data', (data) => console.log(args.fileName + " : " + data));
         }
     };
+    if(argv.init) {
+        ret.call();
+    }
 }
 
 function processEntry(file, command) {

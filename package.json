@@ -1,6 +1,6 @@
 {
   "name": "run-on-change",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Run something on file change ",
   "main": "index.js",
   "scripts": {
@@ -16,5 +16,8 @@
     "url": "https://github.com/mjy9088/run-on-change/issues"
   },
   "bin": "./index.js",
-  "homepage": "https://github.com/mjy9088/run-on-change#readme"
+  "homepage": "https://github.com/mjy9088/run-on-change#readme",
+  "dependencies": {
+    "minimist": "^1.2.0"
+  }
 }

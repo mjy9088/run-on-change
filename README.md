@@ -36,6 +36,24 @@ npx run-on-change
 
 It will automatically transpile the jsx file **on file changes** (listed in `list.txt`)
 
+When you want to **run all once** without file changes, use `--init` option.
+
+```bash
+git clone (URL)
+npm install
+npx run-on-change --init
+```
+
+it's useful when each script folder's `.gitignore` lists js files
+
+
+
+## run-on-change.json
+
+`run-on-change.json` specifies what to run on which file changes.
+
+The `run-on-changing.json` file consists of a single array of array.
+
 Each array's first element is commands array, and rests are files.
 If file is object with `{type: "text"}`, It will watch all files listed in the `file`.
 
@@ -52,5 +70,7 @@ First element is format, rests are arguments. It uses `util.format`.
 
 ## Release History
 
-none
+Please don't use `0.1.1` and `0.1.3`
+
+There are no plans to document & support older versions *under `1.0.0`*
 
