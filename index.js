@@ -50,11 +50,11 @@ function getListener(comm, args) {
                     prev.pipe(child.stdin);
                 }
                 prev = child.stdout;
-                child.stderr.on('data', (data) => console.log(`${file}[${i}] : ` + data));
+                child.stderr.on('data', (data) => console.log(`${args.fileName}[${i}] : ` + data));
             }
         }
         if(prev) {
-            prev.on('data', (data) => console.log(file + " : " + data));
+            prev.on('data', (data) => console.log(args.fileName + " : " + data));
         }
     };
 }
