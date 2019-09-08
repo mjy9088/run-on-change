@@ -34,7 +34,8 @@ function getListener(comm, args) {
             let command = comm[i];
             if(!Array.isArray(command)) {
                 if(i == 0) {
-                    prev = fs.createReadStream(typeof command === 'number' ? etc2string(command, args) : command);
+                    let fileName = typeof command === 'number' ? etc2string(command, args) : command;
+                    prev = fs.createReadStream(args.cwd ? path.join(args.cwd, fileName) : fileName);
                 }
                 else {
                     if(comm[i + 1]) {
@@ -59,6 +60,7 @@ function getListener(comm, args) {
                 let child = child_process.spawn(command.shift(), command, {
                     stdio: [prev ? 'pipe' : 'ignore', 'pipe', 'pipe'],
                     shell: true,
+                    cwd: args.cwd,
                     windowsHide: true
                 });
                 child.on('error', function(err) {
@@ -80,14 +82,18 @@ function getListener(comm, args) {
     }
 }
 
-function processEntry(file, command) {
+function processEntry(file, command, args) {
     if(typeof file === 'string') {
-        processFile(file, command);
+        processFile(file, command, args);
     }
     else {
         switch(file.type) {
             case 'text':
-                processText(file, command);
+                    file.cwd = args.cwd;
+                    processText(file, command);
+                break;
+            case 'include':
+                processInclude(file.file);
                 break;
             default:
                 console.log('ERROR : Unknown type: ' + file.type);
@@ -99,7 +105,8 @@ function processEntry(file, command) {
 function processFile(file, command, args) {
     let attrs = {
         fileName: file,
-        absolutePath: path.resolve(file)
+        absolutePath: path.resolve(file),
+        cwd: args.cwd
     };
     if(args) {
         attrs.original = args.original;
@@ -112,11 +119,12 @@ function processFile(file, command, args) {
 }
 
 function processText(args, command) {
+    args.file = args.cwd ? path.join(args.cwd, args.file) : args.file;
     fs.readFile(args.file, (err, data) => {
         if (err) throw err;
         data.toString().split('\n').map(line => line.trim()).filter(line => !!line).forEach(line => {
             let fileName = args.filter ? arr2string(args.filter, {fileName: line, absolutePath: path.resolve(line)}) : line;
-            return processFile(fileName, command, {original: line});
+            return processFile(args.cwd ? path.join(args.cwd, fileName) : fileName, command, {original: line});
         });
     })
 }
@@ -129,7 +137,7 @@ function processInclude(file) {
         list.forEach(li => {
             if(!li instanceof Array) throw 'Invalid run-on-change.json file';
             let t = li.shift();
-            li.forEach(l => processEntry(l, t));
+            li.forEach(l => processEntry(l, t, {cwd: path.dirname(path.resolve(file))}));
         });
     });
 }
