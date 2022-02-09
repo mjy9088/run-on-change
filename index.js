@@ -24,7 +24,8 @@ function arr2string(arr, args) {
 
 function getListener(comm, args) {
     const ret = () => {
-        if(!comm instanceof Array)
+        console.log("running!");
+        if(!(comm instanceof Array))
         {
             console.log('ERROR : command must be an array');
             return;
@@ -80,6 +81,7 @@ function getListener(comm, args) {
     if(argv.init) {
         ret.call();
     }
+    return ret;
 }
 
 function processEntry(file, command, args) {
@@ -133,9 +135,9 @@ function processInclude(file) {
     fs.readFile(file, (err, data) => {
         if (err) throw err;
         let list = JSON.parse(data);
-        if(!list instanceof Array) throw 'Invalid run-on-change.json file';
+        if(!(list instanceof Array)) throw 'Invalid run-on-change.json file';
         list.forEach(li => {
-            if(!li instanceof Array) throw 'Invalid run-on-change.json file';
+            if(!(li instanceof Array)) throw 'Invalid run-on-change.json file';
             let t = li.shift();
             li.forEach(l => processEntry(l, t, {cwd: path.dirname(path.resolve(file))}));
         });

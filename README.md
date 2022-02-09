@@ -1,7 +1,6 @@
 # run-on-change
-Run something on file change
 
-
+Run given command on file change
 
 ## Installation
 
@@ -9,11 +8,9 @@ Run something on file change
 npm install --save-dev run-on-change
 ```
 
-
-
 ## Usage example
 
-Just create file `run-on-change.json ` for project
+Create file `run-on-change.json` for the project (example below)
 
 ```json
 [
@@ -46,8 +43,6 @@ npx run-on-change --init
 
 it's useful when each script folder's `.gitignore` lists js files
 
-
-
 ## run-on-change.json
 
 `run-on-change.json` specifies what to run on which file changes.
@@ -72,5 +67,6 @@ First element is format, rests are arguments. It uses `util.format`.
 
 Please don't use `0.1.1` and `0.1.3`
 
-There are no plans to document & support older versions *under `1.0.0`*
+- `0.1.6`: fix bug
 
+No plan to document & support older versions *under `1.0.0`*

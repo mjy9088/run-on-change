@@ -1,8 +1,9 @@
 {
   "name": "run-on-change",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Run something on file change ",
   "main": "index.js",
+  "files": ["index.js"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

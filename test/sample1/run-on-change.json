@@ -1,0 +1,10 @@
+[
+    [
+        [["echo", 1]],
+        {
+            "type": "text",
+            "file": "list.txt",
+            "filter": ["%s.original", 1]
+        }
+    ]
+]
