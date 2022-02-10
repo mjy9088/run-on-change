@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "importHelpers": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "declaration": true,
+    "sourceMap": true
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
